@@ -8,6 +8,7 @@ import java.util.ArrayList;
  *
  */
 public class Board {
+	private int blinds;
 	private ArrayList<Card> cardsOnBoard;
 	/**
 	 * Simple constructor
@@ -35,5 +36,11 @@ public class Board {
 	 */
 	public void removeCardFromBoard(Card card) {
 		cardsOnBoard.remove(card);
+	}
+	public void addBlind(int blind) {
+		this.blinds += blind;
+	}
+	public int removeBlinds() {
+		return blinds;
 	}
 }

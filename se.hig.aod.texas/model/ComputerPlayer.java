@@ -22,7 +22,6 @@ public class ComputerPlayer extends Player {
 		super.name = name;
 		super.position = position;
 		this.difficulty = difficulty;
-		super.cardsInPile = new ArrayList<Card>();
 		super.cardsOnHand = new ArrayList<Card>();
 	}
 	/**

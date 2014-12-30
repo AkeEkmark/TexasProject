@@ -22,11 +22,15 @@ public class AiControl {
 	private int difficulty;
 	private BoardHandler boardHandler;
 	private PlayerMoves playerMoves;
-	private BoardFrame boardFrame;
-	public AiControl(BoardHandler boardHandler, PlayerMoves playerMoves, BoardFrame boardFrame) {
+	private static final int preFlop = 0, first = 0;
+	private static final int byTheBook = 1, flop = 1, second = 1;
+	private static final int bluffer= 2, turn= 2, third = 2;
+	private static final int river = 3;
+	
+
+	public AiControl(BoardHandler boardHandler, PlayerMoves playerMoves, Rules rules) {
 		this.boardHandler = boardHandler;
 		this.playerMoves = playerMoves;
-		this.boardFrame = boardFrame;
 		random = new Random();
 	}
 	/**
@@ -36,121 +40,62 @@ public class AiControl {
 	 * @param player : the computer-player to make the move for.
 	 * @return a string describing the move the player did.
 	 */
-	public String makeMove(Player player) {
+	public String makeMove(Player player, int round, int stage) {
+		int position = player.getPosition();
+		int nbrBlinds = player.getBlinds();
+		double opponentHandStrength = player.getOpponentHandStrength();
+		double myHandStrength = player.getMyHandStrength();
+		double chanceToWin;
 		difficulty = ((ComputerPlayer)player).getDifficulty();
 		
-		ArrayList<AvaliableMoves> avaliableMoves = new ArrayList<AvaliableMoves>();
-		ArrayList<Integer> cardsToTake = new ArrayList<Integer>();
-		Card cardToAddtoBoard;
-		Card cardToTakeCardsWith;
-		ArrayList<Card> cardsToTakeFromBoard = new ArrayList<Card>();
-		ArrayList<Card> prioCards = new ArrayList<Card>();
-		int indexOfCardOnHand = 0;
-		int indexOfCardOnBoard = 0;
+	
 		switch (difficulty) {
-		case 1: 
-			for (Card card : player.getCardsOnHand()) {
-				for (Card cardOnBoard : boardHandler.getCardsOnBoard()) {
-					if (card.getValue() == cardOnBoard.getValue()) {
-						cardsToTake.add(indexOfCardOnBoard);
-						avaliableMoves.add(new AvaliableMoves(indexOfCardOnHand, cardsToTake, 0));
+		case byTheBook: 
+			switch (round) {
+			case preFlop:
+				if (opponentHandStrength >= 5) {
+					if (myHandStrength >= 10) {
+						if (stage == third) {
+							playerMoves.call(player);
+						}
+						else {
+							playerMoves.raise(player);
+						}
 						
 					}
-					indexOfCardOnBoard++;
-				}
-				indexOfCardOnBoard = 0;
-				indexOfCardOnHand++;
-			}
-			if (!avaliableMoves.isEmpty()) {
-				System.out.println("moves, trying to take cards from board");
-				System.out.println(avaliableMoves.size());
-				int rndmIndex = random.nextInt(avaliableMoves.size());
-				System.out.println(rndmIndex);
-				cardToTakeCardsWith = player.getCardsOnHand().get(avaliableMoves.get(rndmIndex).getCardOnHand());
-				for (int i : avaliableMoves.get(rndmIndex).getCardsOnBoard()) {
-					cardsToTakeFromBoard.add(boardHandler.getCardsOnBoard().get(i));
-				}
-				System.out.println("card i want to take with: "+ cardToTakeCardsWith);
-				for (Card card : cardsToTakeFromBoard) {
-					System.out.println("cards i want to take");
-					System.out.println(card.toString());
-				}
-				
-				if (playerMoves.takeCardFromBoard(cardToTakeCardsWith, cardsToTakeFromBoard, player)) {
-					for (Card card : cardsToTakeFromBoard) {
-						boardFrame.getBoardPanel().removeCard(card);
+					else if (myHandStrength >= 0){
+						playerMoves.call(player);
 					}
-					boardFrame.getBoardPanel().revalidate();
-					ArrayList<Players> players = boardFrame.getPlayers();
-					for (Players computer: players) {
-						if (computer.getPlayer() == player) {
-							computer.removeCard(null);
-							
-						}
+					else {
+						playerMoves.fold(player);
 					}
-					player.setTurnEnded(true);
-					String move = "Computer took : ";
-					for (Card card : cardsToTakeFromBoard) {
-						move +=card.toString() + " , ";
-					}
-					move +=" with : " +cardToTakeCardsWith.toString();
-					return move;
 				}
 				else {
-					//ful lösning på en bugg
-					System.out.println("no moves, trying to put card on board");
-					cardToAddtoBoard = player.getCardsOnHand().get(random.nextInt(player.getCardsOnHand().size()));
-					if (playerMoves.addCardToBoard(cardToAddtoBoard, player)) {
-						boardFrame.getBoardPanel().addCard(cardToAddtoBoard);
-						boardFrame.getBoardPanel().revalidate();
-						ArrayList<Players> players = boardFrame.getPlayers();
-						for (Players computer: players) {
-							if (computer.getPlayer() == player) {
-								computer.removeCard(null);
-								
-							}
-						}
-						player.setTurnEnded(true);
-						String move = "Computer put "+ cardToAddtoBoard.toString() +" to the board";
-						return move;
+					if (myHandStrength >= 5) {
+						playerMoves.raise(player);
+					}
+					else {
+						playerMoves.check(player);
 					}
 				}
-			}
-			else {
-				System.out.println("no moves, trying to put card on board");
-				cardToAddtoBoard = player.getCardsOnHand().get(random.nextInt(player.getCardsOnHand().size()));
-				if (playerMoves.addCardToBoard(cardToAddtoBoard, player)) {
-					boardFrame.getBoardPanel().addCard(cardToAddtoBoard);
-					boardFrame.getBoardPanel().revalidate();
-					ArrayList<Players> players = boardFrame.getPlayers();
-					for (Players computer: players) {
-						if (computer.getPlayer() == player) {
-							computer.removeCard(null);
-							
-						}
-					}
-					player.setTurnEnded(true);
-					String move = "Computer put "+ cardToAddtoBoard.toString() +" to the board";
-					return move;
+			case flop:
+				chanceToWin = analyzeCards();
+				if (chanceToWin > 70) {
+					playerMoves.raise(player);
+				}
+				else if (chanceToWin > 50) {
+					playerMoves.check(player);
+				}
+				else {
+					playerMoves.fold(player);
 				}
 			}
+
 			
+
 			break;
 		case 2:
-			for (Card cardOnBoard : boardHandler.getCardsOnBoard()) {
-				if (cardOnBoard.getSuit() == Suit.DIAMOND && cardOnBoard.getValue() == Value.TEN) {
-					prioCards.add(cardOnBoard);
-				}
-				if (cardOnBoard.getSuit() == Suit.SPADE && cardOnBoard.getValue() == Value.TWO) {
-					prioCards.add(cardOnBoard);
-				}
-				if (cardOnBoard.getValue() == Value.ACE) {
-					prioCards.add(cardOnBoard);
-				}
-				
-			}
-			
-			
+
 			break;
 		case 3:
 			
@@ -158,8 +103,11 @@ public class AiControl {
 		default:
 			break;
 		}
-		avaliableMoves.clear();
 		return "no moves avaliable";
+	}
+	private double analyzeCards() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	/**
 	 * An inner class to save the possible moves.

@@ -19,6 +19,8 @@ public abstract class Player {
 	protected String name;
 	protected ArrayList<Card> cardsOnHand;
 	protected boolean turnEnded = false;
+	protected double myHandStrength;
+	protected double opponentHandStrength;
 	
 	public boolean isTurnEnded() {
 		return turnEnded;
@@ -39,6 +41,9 @@ public abstract class Player {
 	public void dealCardToHand(Card card) {
 		cardsOnHand.add(card);
 	}
+	public void clearHand() {
+		cardsOnHand.clear();
+	}
 
 	public int getBlinds() {
 		return blinds;
@@ -48,6 +53,18 @@ public abstract class Player {
 	}
 	public String getName() {
 		return name;
+	}
+	public double getOpponentHandStrength() {
+		return opponentHandStrength;
+	}
+	public void setOpponentHandStrength(double opponentHandStrength) {
+		this.opponentHandStrength = opponentHandStrength;
+	}
+	public double getMyHandStrength() {
+		return myHandStrength;
+	}
+	public void setMyHandStrength(double myHandStrength) {
+		this.myHandStrength = myHandStrength;
 	}
 
 	

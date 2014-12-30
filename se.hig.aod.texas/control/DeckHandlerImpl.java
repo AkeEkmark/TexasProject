@@ -28,8 +28,9 @@ public class DeckHandlerImpl implements DeckHandler {
 		return deck;
 	}
 	@Override
-	public void returnCard(Card card) {
-		deck.returnCard(card);
+	public void newDeck() {
+		deck = new Deck();
+		
 	}
 
 }

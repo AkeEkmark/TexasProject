@@ -10,6 +10,8 @@ import model.Player;
  *
  */
 public interface PlayerMoves {
-	public boolean takeCardFromBoard(Card cardOnHand, ArrayList<Card> cardsOnBoard, Player player);
-	public boolean addCardToBoard(Card cardOnHand, Player player);
+	public void fold(Player player);
+	public void check(Player player);
+	public void call(Player player);
+	public void raise(Player player);
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class ComputerPlayer extends Player {
 	private int difficulty;
+	
 	/**
 	 * 
 	 * @param name is the name of Computerplayer
@@ -31,5 +32,6 @@ public class ComputerPlayer extends Player {
 	public int getDifficulty() {
 		return difficulty;
 	}
+
 	
 }

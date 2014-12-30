@@ -14,4 +14,5 @@ public interface PlayerHandler {
 	public void createComputerPlayer(String name, int position, int difficulty);
 	public ArrayList<Player> getPlayers();
 	public void dealCardToPlayer(Player player, Card card);
+	public void clearHand(Player player);
 }

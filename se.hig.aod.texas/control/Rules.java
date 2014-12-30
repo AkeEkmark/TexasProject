@@ -5,7 +5,7 @@ import model.Card;
 public class Rules {
 	public double chenFormula(Card card1, Card card2) {
 		double score = 0;
-		//System.out.println(card1 +" " +card2);
+		System.out.println(card1 +" " +card2);
 		double baseScore = Math.max(score(card1), score(card2));
 		if (card1.getValue() == card2.getValue()) {
 			baseScore = (Math.max(5, baseScore)*2);
@@ -14,7 +14,7 @@ public class Rules {
 			baseScore += 2;
 		}
 		score = baseScore - gap(card1, card2);
-		//System.out.println("Score of cards is :" +score );
+		System.out.println("Score of cards is :" +score );
 		return score;
 	}
 
@@ -78,4 +78,5 @@ public class Rules {
 		}
 		return score;
 	}
+	
 }

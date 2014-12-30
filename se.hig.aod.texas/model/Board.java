@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  */
 public class Board {
-	private int blinds;
+	private int blinds = 0;
 	private ArrayList<Card> cardsOnBoard;
 	/**
 	 * Simple constructor
@@ -34,13 +34,14 @@ public class Board {
 	 * 
 	 * @param card : the card to remove from the board
 	 */
-	public void removeCardFromBoard(Card card) {
-		cardsOnBoard.remove(card);
+	public void clearBoard() {
+		blinds = 0;
+		cardsOnBoard.clear();
 	}
 	public void addBlind(int blind) {
 		this.blinds += blind;
 	}
-	public int removeBlinds() {
+	public int getBlinds() {
 		return blinds;
 	}
 }

@@ -12,77 +12,31 @@ import model.Player;
  *
  */
 public class PlayerMovesImpl implements PlayerMoves {
-	private PlayerHandler playerHandler;
 	private BoardHandler boardHandler;
 	private PointCounter pointCounter;
-	public PlayerMovesImpl(PlayerHandler playerHandler, BoardHandler boardHandler, PointCounter pointCounter) {
-		this.playerHandler = playerHandler;
+	public PlayerMovesImpl(BoardHandler boardHandler, PointCounter pointCounter) {
 		this.boardHandler = boardHandler;
 		this.pointCounter = pointCounter;
 	}
-
 	@Override
-	public boolean takeCardFromBoard(Card cardOnHand, ArrayList<Card> cardsOnBoard, Player player) {
-		int valueOfHand = 0;
-		int valueOfHandAce = 0;
-		int valueOfBoard = 0;
-		int valueOfBoardAce = 0;
-		boolean handOk = false;
-		if (boardHandler.getCardsOnBoard().containsAll(cardsOnBoard) && player.getCardsOnHand().contains(cardOnHand)) {
-			valueOfHand = cardOnHand.getValue().value();
-			if (cardOnHand.getValue() == Value.ACE) {
-				valueOfHandAce = 14;
-			}
-			for (Card card : cardsOnBoard) {
-				if (card.getValue() == Value.ACE) {
-					valueOfBoardAce += 14;
-					valueOfBoard += card.getValue().value();
-				}
-				else {
-					valueOfBoardAce += card.getValue().value();
-					valueOfBoard += card.getValue().value();
-				}
-				
-			}
-			if (valueOfHandAce == 0){
-				if ((valueOfBoard % valueOfHand == 0) || (valueOfBoardAce % valueOfHand == 0)) {
-					handOk = true;
-				}
-			}
-			else {
-				if ((valueOfBoard % valueOfHand == 0) || (valueOfBoardAce % valueOfHand == 0) || (valueOfBoard % valueOfHandAce == 0) || (valueOfBoardAce % valueOfHandAce == 0)) {
-					handOk = true;
-				}
-				
-			}
-			if (handOk) {
-				System.out.println("trying to take cards");
-				player.takeCardFromBoard(cardOnHand, cardsOnBoard);
-				ArrayList<Card> allCards = new ArrayList<Card>();
-				allCards.add(cardOnHand);
-				allCards.addAll(cardsOnBoard);
-				pointCounter.calculatePoints(allCards, player);
-				return true;
-			}
-			
-		}
+	public void fold(Player player) {
+		System.out.println(player.getName() +" is folding");
 		
-		return false;
-
 	}
-
 	@Override
-	public boolean addCardToBoard(Card cardOnHand, Player player) {
-		if (player.getCardsOnHand().contains(cardOnHand)) {
-			System.out.println("trying to put card on board");
-			player.addCardToBoard(cardOnHand);
-			
-			return true;
-		}
+	public void check(Player player) {
+		System.out.println(player.getName() +" is checking");
 		
-		return false;
+	}
+	@Override
+	public void call(Player player) {
+		System.out.println(player.getName() +" is calling");
 		
-
+	}
+	@Override
+	public void raise(Player player) {
+		System.out.println(player.getName() +" is raising");
+		
 	}
 
 }

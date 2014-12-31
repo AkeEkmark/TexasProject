@@ -66,4 +66,7 @@ public class GameCreator {
 	public int getDifficulty() {
 		return difficulty;
 	}
+	public Rules getRules() {
+		return rules;
+	}
 }

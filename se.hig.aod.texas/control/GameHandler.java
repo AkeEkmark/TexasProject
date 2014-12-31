@@ -11,11 +11,25 @@ import model.Player;
 public class GameHandler{
 	private GameCreator gameCreator;
 	private int round = 0;
+	private int stage = 0;
 
 	public GameHandler(int nbrOfOpponents, int difficulty) {
 		gameCreator = new GameCreator(nbrOfOpponents, difficulty);
 		gameCreator.createHandlers();
 		setUpGame();
+		while (gameCreator.getPlayerHandler().getPlayers().get(0).getBlinds() > 0 
+				&& gameCreator.getPlayerHandler().getPlayers().get(1).getBlinds() > 0){
+			playGame();
+		}
+		
+		
+	}
+	private void playGame() {
+		
+		for (Player player : gameCreator.getPlayerHandler().getPlayers()) {
+			gameCreator.getAiControl().makeMove(player, round, stage);
+			stage++;
+		}
 		
 	}
 	/**
@@ -28,6 +42,11 @@ public class GameHandler{
 				gameCreator.getPlayerHandler().dealCardToPlayer(player, gameCreator.getDeckHandler().getCard(0));
 			}
 		}
+		for (Player player : gameCreator.getPlayerHandler().getPlayers()) {
+			player.setOpponentHandStrength(3.0);
+			player.setMyHandStrength(gameCreator.getRules().chenFormula(player.getCardsOnHand()));
+		}
+		
 	}
 	private void newGame() {
 		

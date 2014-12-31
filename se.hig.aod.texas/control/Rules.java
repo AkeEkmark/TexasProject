@@ -1,14 +1,18 @@
 package control;
 
+import java.util.ArrayList;
+
 import model.Card;
 
 public class Rules {
-	public double chenFormula(Card card1, Card card2) {
+	public double chenFormula(ArrayList<Card> cards) {
+		Card card1 = cards.get(0);
+		Card card2 = cards.get(1);
 		double score = 0;
 		System.out.println(card1 +" " +card2);
 		double baseScore = Math.max(score(card1), score(card2));
 		if (card1.getValue() == card2.getValue()) {
-			baseScore = (Math.max(5, baseScore)*2);
+			baseScore = (Math.max(5, baseScore*2));
 		}
 		if (card1.getSuit() == card2.getSuit()) {
 			baseScore += 2;

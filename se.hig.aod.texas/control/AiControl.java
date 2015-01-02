@@ -24,6 +24,7 @@ public class AiControl {
 	private int difficulty;
 	private BoardHandler boardHandler;
 	private PlayerMoves playerMoves;
+	private Rules rules;
 	private static final int preFlop = 0, first = 0;
 	private static final int byTheBook = 1, flop = 1, second = 1;
 	private static final int bluffer = 2, turn = 2, third = 2;
@@ -46,9 +47,10 @@ public class AiControl {
 	 *            : the computer-player to make the move for.
 	 * @return a string describing the move the player did.
 	 */
-	public String makeMove(Player player, int round, int stage) {
+	public int makeMove(Player player, int round, int stage) {
+		int move = 0;
 		int position = player.getPosition();
-		int nbrBlinds = player.getBlinds();
+		int nbrBlinds = boardHandler.getBoard().getBlinds();
 		double opponentHandStrength = player.getOpponentHandStrength();
 		double myHandStrength = player.getMyHandStrength();
 		double chanceToWin;
@@ -59,40 +61,40 @@ public class AiControl {
 			switch (round) {
 			case preFlop:
 				if (opponentHandStrength >= 5) {
-					if (myHandStrength >= 10) {
+					if (myHandStrength >= 7) {
 						if (stage == third) {
-							playerMoves.call(player);
+							move = playerMoves.call(player);
 						} else {
-							playerMoves.raise(player);
+							move = playerMoves.raise(player);
 						}
 
-					} else if (myHandStrength >= 0) {
-						playerMoves.call(player);
+					} else if (myHandStrength >= 3) {
+						move = playerMoves.call(player);
 					} else {
-						playerMoves.fold(player);
+						move = playerMoves.fold(player);
 					}
 				} else {
-					if (myHandStrength >= 5) {
-						playerMoves.raise(player);
+					if (myHandStrength >= 3.5) {
+						move = playerMoves.raise(player);
 					} else {
-						playerMoves.check(player);
+						move = playerMoves.check(player);
 					}
 				}
+				
 				break;
 			case flop:
-				
-				chanceToWin = analyzeCards();
+				chanceToWin = analyzeCards(round);
 				if (chanceToWin > 70) {
-					playerMoves.raise(player);
+					move = playerMoves.raise(player);
 				} else if (chanceToWin > 50) {
-					playerMoves.check(player);
+					move = playerMoves.check(player);
 				} else {
-					playerMoves.fold(player);
+					move = playerMoves.fold(player);
 				}
 			}
 
 			break;
-		case 2:
+		case bluffer:
 
 			break;
 		case 3:
@@ -101,11 +103,22 @@ public class AiControl {
 		default:
 			break;
 		}
-		return "no moves avaliable";
+		return move;
 	}
 
-	private double analyzeCards() {
-		// TODO Auto-generated method stub
+	private double analyzeCards(int round) {
+		double chancePair;
+		double chanceTwoPair;
+		double chanceThreeOaK;
+		double chanceStraight;
+		double chanceFlush;
+		double chanceFullHouse;
+		double chanceFourOaK;
+		double chanceStraightFlush;
+		switch (round) {
+		case flop:
+			
+		}
 		return 0;
 	}
 
@@ -115,28 +128,24 @@ public class AiControl {
 	 * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
 	 * 
 	 */
-	public class AvaliableMoves {
-		private int cardOnHand;
-		private ArrayList<Integer> cardsOnBoard;
+	public class AvaliableHands {
+		private ArrayList<Card> cardsOnBoard;
 		private int points;
+		private double chanceToHit;
 
-		public AvaliableMoves(int cardOnHand, ArrayList<Integer> cardsOnBoard,
-				int points) {
-			this.cardOnHand = cardOnHand;
+		public AvaliableHands(double chanceToHit, ArrayList<Card> cardsOnBoard, int points) {
+			this.chanceToHit = chanceToHit;
 			this.cardsOnBoard = cardsOnBoard;
 			this.points = points;
 		}
-
-		public int getCardOnHand() {
-			return cardOnHand;
-		}
-
-		public ArrayList<Integer> getCardsOnBoard() {
+		public ArrayList<Card> getCardsOnBoard() {
 			return cardsOnBoard;
 		}
-
 		public int getPoints() {
 			return points;
+		}
+		public double getChance() {
+			return chanceToHit;
 		}
 	}
 }

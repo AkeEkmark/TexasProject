@@ -10,8 +10,8 @@ import model.Player;
  *
  */
 public interface PlayerMoves {
-	public void fold(Player player);
-	public void check(Player player);
-	public void call(Player player);
-	public void raise(Player player);
+	public int fold(Player player);
+	public int check(Player player);
+	public int call(Player player);
+	public int raise(Player player);
 }

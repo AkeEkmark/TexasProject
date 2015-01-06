@@ -1,5 +1,6 @@
 package control;
 
+
 import java.util.ArrayList;
 
 import model.Card;
@@ -186,6 +187,68 @@ public class Rules {
 				}
 			}
 		}
+		return 0;
+	}
+
+	public double chanceFlush(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		int cardsWithSuit = 0;
+		int cardsWithSuit2 = 0;
+		if (cardOnHand1.getSuit() == cardOnHand2.getSuit()) {
+			cardsWithSuit = 2;
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getSuit() == cardOnHand1.getSuit()) {
+					cardsWithSuit++;
+				}
+			}
+			if (cardsWithSuit == 5) {
+				return 1;
+			}
+			if (cardsWithSuit == 3 && round == 1) {
+				return 0.5;
+			}
+			if (cardsWithSuit == 4 && round != 3) {
+				return 0.75;
+			}
+			else {
+				return 0;
+			}
+			
+		}
+		else {
+			cardsWithSuit = 1;
+			cardsWithSuit2 = 1;
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getSuit() == cardOnHand1.getSuit()) {
+					cardsWithSuit++;
+				}
+			}
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getSuit() == cardOnHand2.getSuit()) {
+					cardsWithSuit2++;
+				}
+			}
+			if (cardsWithSuit == 5 || cardsWithSuit2 == 5) {
+				return 1;
+			}
+			if ((cardsWithSuit == 3 || cardsWithSuit2 == 3) && round == 1) {
+				return 0.5;
+			}
+			if ((cardsWithSuit == 4 || cardsWithSuit2 == 4) && round != 3) {
+				return 0.75;
+			}
+			else {
+				return 0;
+			}
+			
+		}
+	}
+
+	public double chanceStraight(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		
 		return 0;
 	}
 	

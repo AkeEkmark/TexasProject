@@ -133,8 +133,8 @@ public class AiControl {
 				chanceThreeOaK = rules.chanceTreeOaK(cardsOnHand, cardsOnBoard, round);
 				chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
 			}
-			
-			
+			chanceFlush = rules.chanceFlush(cardsOnHand, cardsOnBoard, round);
+			chanceStraight = rules.chanceStraight(cardsOnHand, cardsOnBoard, round);
 		}
 		return 0;
 	}

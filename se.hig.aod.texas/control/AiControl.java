@@ -1,11 +1,11 @@
 package control;
 
-import gui.Board.BoardFrame;
-import gui.Board.Players;
+
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import model.Board;
 import model.Card;
 import model.Card.Suit;
 import model.Card.Value;
@@ -22,7 +22,7 @@ import model.Player;
 public class AiControl {
 	private Random random;
 	private int difficulty;
-	private BoardHandler boardHandler;
+	private Board board;
 	private PlayerMoves playerMoves;
 	private Rules rules;
 	private static final int preFlop = 0, first = 0;
@@ -32,8 +32,9 @@ public class AiControl {
 
 	public AiControl(BoardHandler boardHandler, PlayerMoves playerMoves,
 			Rules rules) {
-		this.boardHandler = boardHandler;
+		this.board = boardHandler.getBoard();
 		this.playerMoves = playerMoves;
+		this.rules = rules;
 		random = new Random();
 	}
 
@@ -50,7 +51,7 @@ public class AiControl {
 	public int makeMove(Player player, int round, int stage) {
 		int move = 0;
 		int position = player.getPosition();
-		int nbrBlinds = boardHandler.getBoard().getBlinds();
+		int nbrBlinds = board.getBlinds();
 		double opponentHandStrength = player.getOpponentHandStrength();
 		double myHandStrength = player.getMyHandStrength();
 		double chanceToWin;
@@ -83,7 +84,7 @@ public class AiControl {
 				
 				break;
 			case flop:
-				chanceToWin = analyzeCards(round);
+				chanceToWin = analyzeCards(round, player);
 				if (chanceToWin > 70) {
 					move = playerMoves.raise(player);
 				} else if (chanceToWin > 50) {
@@ -91,6 +92,13 @@ public class AiControl {
 				} else {
 					move = playerMoves.fold(player);
 				}
+				break;
+			case turn:
+				break;
+			case river:
+				break;
+			default:
+				break;
 			}
 
 			break;
@@ -106,7 +114,9 @@ public class AiControl {
 		return move;
 	}
 
-	private double analyzeCards(int round) {
+	private double analyzeCards(int round, Player player) {
+		ArrayList<Card> cardsOnHand = player.getCardsOnHand();
+		ArrayList<Card> cardsOnBoard = board.getCardsOnBoard();
 		double chancePair;
 		double chanceTwoPair;
 		double chanceThreeOaK;
@@ -117,6 +127,13 @@ public class AiControl {
 		double chanceStraightFlush;
 		switch (round) {
 		case flop:
+			chancePair = rules.chancePair(cardsOnHand, cardsOnBoard, round);
+			if (chancePair > 0) {
+				chanceTwoPair = rules.chanceTwoPair(cardsOnHand, cardsOnBoard, round);
+				chanceThreeOaK = rules.chanceTreeOaK(cardsOnHand, cardsOnBoard, round);
+				chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
+			}
+			
 			
 		}
 		return 0;

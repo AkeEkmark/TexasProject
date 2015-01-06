@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 import model.Card;
 import model.Deck;
 import control.Rules;
@@ -10,10 +12,12 @@ public class ChenTest {
 		for (int i = 0; i < 1000000; i++) {
 			Deck deck = new Deck();
 			deck.shuffleDeck();
-			Card card1 = deck.getCard(0);
-			Card card2 = deck.getCard(0);
+			ArrayList<Card> cards = new ArrayList<Card>();
+			cards.add(deck.getCard(0));
+			cards.add(deck.getCard(0));
+			
 			Rules rules = new Rules();
-			double score = rules.chenFormula(card1, card2);
+			double score = rules.chenFormula(cards);
 			if (score <= 0) {
 				spread[0]++;
 			}

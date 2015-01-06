@@ -82,5 +82,111 @@ public class Rules {
 		}
 		return score;
 	}
+
+	public double chancePair(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		if (cardOnHand1.getValue() == cardOnHand2.getValue()) {
+			return 1;
+		}
+		for (Card cardOnBoard : cardsOnBoard) {
+			if (cardOnHand1.getValue() == cardOnBoard.getValue() || cardOnHand2.getValue() == cardOnBoard.getValue()) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	public double chanceTwoPair(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		double chance = 0;
+		if (cardOnHand1.getValue() == cardOnHand2.getValue()) {
+			for (int i = 0; i < cardsOnBoard.size(); i++) {
+				for (int j = i+1; j < cardsOnBoard.size(); j++) {
+					if (cardsOnBoard.get(i).getValue() == cardsOnBoard.get(j).getValue()) {
+						return 1;
+					}
+				}
+			}
+		}
+		else {
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnHand1.getValue() == cardOnBoard.getValue() || cardOnHand2.getValue() == cardOnBoard.getValue()) {
+					chance += 0.5;
+				}
+			}
+		}
+		
+		
+		return chance;
+	}
+
+	public double chanceTreeOaK(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		if (cardOnHand1.getValue() == cardOnHand2.getValue()) {
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getValue() == cardOnHand1.getValue()) {
+					return 1;
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < cardsOnBoard.size(); i++) {
+				for (int j = i+1; j < cardsOnBoard.size(); j++) {
+					if (cardsOnBoard.get(i).getValue() == cardsOnBoard.get(j).getValue() && (cardsOnBoard.get(i).getValue() == cardOnHand1.getValue()) 
+							|| (cardsOnBoard.get(i).getValue() == cardOnHand2.getValue())) {
+						return 1;
+					}
+				}
+			}
+		}
+		return 0;
+	}
+
+	public double chanceFourOaK(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		int cardsWithValue = 0;
+		if (cardOnHand1.getValue() == cardOnHand2.getValue()) {
+			cardsWithValue = 2;
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getValue() == cardOnHand1.getValue()) {
+					cardsWithValue++;
+				}
+			}
+			if (cardsWithValue == 4) {
+				return 1;
+			}
+			return 0;
+		}
+		else {
+			if (chanceTreeOaK(cardsOnHand, cardsOnBoard, round) != 1) {
+				return 0;
+			}
+			else {
+				cardsWithValue = 1;
+				for (Card cardOnBoard : cardsOnBoard) {
+					if (cardOnBoard.getValue() == cardOnHand1.getValue()) {
+						cardsWithValue++;
+					}
+				}
+				if (cardsWithValue == 4) {
+					return 1;
+				}
+				cardsWithValue = 1;
+				for (Card cardOnBoard : cardsOnBoard) {
+					if (cardOnBoard.getValue() == cardOnHand2.getValue()) {
+						cardsWithValue++;
+					}
+				}
+				if (cardsWithValue == 4) {
+					return 1;
+				}
+			}
+		}
+		return 0;
+	}
 	
 }

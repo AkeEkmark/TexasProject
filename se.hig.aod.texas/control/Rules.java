@@ -247,21 +247,45 @@ public class Rules {
 	public double chanceStraight(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
-		int cardsInStraight = 1;
-
+		int cardsInStraight = 0;
+		boolean ace = false;
+		int points = 0;
 		ArrayList<Card> sortedList = new ArrayList<Card>();
 		ArrayList<Card> straight = new ArrayList<Card>();
 		sortedList.add(cardOnHand2);
 		sortedList.add(cardOnHand1);
 		sortedList.addAll(cardsOnBoard);
 		Collections.sort(sortedList);
-		
-		for (int i = 1; i < sortedList.size(); i++) {
-			if (sortedList.get(i).getValue().value() - sortedList.get(i-1).getValue().value() == 1 ) {
-				cardsInStraight++;
-				straight.add(sortedList.get(i-1));
+		for (Card card : sortedList) {
+			if (card.getValue() == model.Card.Value.ACE) {
+				ace = true;
 			}
 		}
+		if (ace) {
+			
+		}
+		else {
+			
+		}
+		for (int i = 1; i < sortedList.size(); i++) {
+			if (sortedList.get(i).getValue().value() - sortedList.get(i-1).getValue().value() == 1 ) {
+				if (cardsInStraight == 0) {
+					straight.add(sortedList.get(i-1));
+					cardsInStraight++;
+				}
+				straight.add(sortedList.get(i));
+				cardsInStraight++;
+			}
+		}
+		
+		
+		if 	(straight.contains(cardOnHand1) || straight.contains(cardOnHand2) ) {
+			points = 1;
+			if (straight.containsAll(cardsOnHand)) {
+				points = 2;
+			}
+		}
+		
 			
 		
 		return 0;

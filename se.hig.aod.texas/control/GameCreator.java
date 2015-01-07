@@ -32,7 +32,7 @@ public class GameCreator {
 		boardHandler = new BoardHandlerImpl();
 		playerHandler = new PlayerHandlerImpl(nbrOfOpponents, difficulty, boardHandler);
 		pointCounter = new PointCounter(boardHandler);
-		playerMoves = new PlayerMovesImpl(boardHandler, pointCounter);
+		playerMoves = new PlayerMovesImpl(boardHandler);
 		aiControl = new AiControl(boardHandler, playerMoves, rules);
 	}
 

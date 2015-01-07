@@ -2,6 +2,7 @@ package control;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import model.Card;
 
@@ -10,7 +11,7 @@ public class Rules {
 		Card card1 = cards.get(0);
 		Card card2 = cards.get(1);
 		double score = 0;
-		System.out.println(card1 +" " +card2);
+		System.out.println(card1 +" : " +card2);
 		double baseScore = Math.max(score(card1), score(card2));
 		if (card1.getValue() == card2.getValue()) {
 			baseScore = (Math.max(5, baseScore*2));
@@ -136,8 +137,8 @@ public class Rules {
 		else {
 			for (int i = 0; i < cardsOnBoard.size(); i++) {
 				for (int j = i+1; j < cardsOnBoard.size(); j++) {
-					if (cardsOnBoard.get(i).getValue() == cardsOnBoard.get(j).getValue() && (cardsOnBoard.get(i).getValue() == cardOnHand1.getValue()) 
-							|| (cardsOnBoard.get(i).getValue() == cardOnHand2.getValue())) {
+					if ((cardsOnBoard.get(i).getValue() == cardsOnBoard.get(j).getValue()) && ((cardsOnBoard.get(i).getValue() == cardOnHand1.getValue()) 
+							|| (cardsOnBoard.get(i).getValue() == cardOnHand2.getValue()))) {
 						return 1;
 					}
 				}
@@ -223,8 +224,6 @@ public class Rules {
 				if (cardOnBoard.getSuit() == cardOnHand1.getSuit()) {
 					cardsWithSuit++;
 				}
-			}
-			for (Card cardOnBoard : cardsOnBoard) {
 				if (cardOnBoard.getSuit() == cardOnHand2.getSuit()) {
 					cardsWithSuit2++;
 				}
@@ -248,8 +247,62 @@ public class Rules {
 	public double chanceStraight(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
+		int cardsInStraight = 1;
+
+		ArrayList<Card> sortedList = new ArrayList<Card>();
+		ArrayList<Card> straight = new ArrayList<Card>();
+		sortedList.add(cardOnHand2);
+		sortedList.add(cardOnHand1);
+		sortedList.addAll(cardsOnBoard);
+		Collections.sort(sortedList);
+		
+		for (int i = 1; i < sortedList.size(); i++) {
+			if (sortedList.get(i).getValue().value() - sortedList.get(i-1).getValue().value() == 1 ) {
+				cardsInStraight++;
+				straight.add(sortedList.get(i-1));
+			}
+		}
+			
 		
 		return 0;
 	}
+
+	public double chanceFullHouse(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
+		Card cardOnHand1 = cardsOnHand.get(0);
+		Card cardOnHand2 = cardsOnHand.get(1);
+		ArrayList<Card> checkedCards = new ArrayList<Card>();
+		int pair = 0;
+		int toak = 0;
+		
+		if (cardOnHand1.getValue() == cardOnHand2.getValue()) {
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnBoard.getValue() == cardOnHand1.getValue()) {
+					toak = 1;
+					checkedCards.add(cardOnHand2);
+					checkedCards.add(cardOnHand1);
+					checkedCards.add(cardOnBoard);
+				}
+			}
+			if (toak != 1) {
+				checkedCards.add(cardOnHand2);
+				checkedCards.add(cardOnHand1);
+				pair = 1;
+			}
+			else {
+				
+			}
+			
+		}
+		else {
+			for (Card cardOnBoard : cardsOnBoard) {
+				if (cardOnHand1.getValue() == cardOnBoard.getValue() || cardOnHand2.getValue() == cardOnBoard.getValue()) {
+					return 1;
+				}
+			}
+		}
+		
+		return 0;
+	}
+
 	
 }

@@ -1,8 +1,5 @@
 package control;
 
-import java.util.ArrayList;
-
-import model.Card;
 import model.Player;
 /**
  * Interface for the players moves.

@@ -117,26 +117,36 @@ public class AiControl {
 	private double analyzeCards(int round, Player player) {
 		ArrayList<Card> cardsOnHand = player.getCardsOnHand();
 		ArrayList<Card> cardsOnBoard = board.getCardsOnBoard();
-		double chancePair;
-		double chanceTwoPair;
-		double chanceThreeOaK;
-		double chanceStraight;
-		double chanceFlush;
-		double chanceFullHouse;
-		double chanceFourOaK;
-		double chanceStraightFlush;
+		int chanceToWin = 0;
+		double chancePair = 0;
+		double chanceTwoPair = 0;
+		double chanceThreeOaK = 0;
+		double chanceStraight = 0;
+		double chanceFlush = 0;
+		double chanceFullHouse = 0;
+		double chanceFourOaK = 0;
+		double chanceStraightFlush = 0;
+		chancePair = rules.chancePair(cardsOnHand, cardsOnBoard, round);
+		chanceTwoPair = rules.chanceTwoPair(cardsOnHand, cardsOnBoard, round);
+		chanceThreeOaK = rules.chanceTreeOaK(cardsOnHand, cardsOnBoard, round);
+		chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
+		chanceFlush = rules.chanceFlush(cardsOnHand, cardsOnBoard, round);
+		chanceStraight = rules.chanceStraight(cardsOnHand, cardsOnBoard, round);
+		chanceFullHouse = rules.chanceFullHouse(cardsOnHand, cardsOnBoard, round); 
+		if (chanceFlush == 1 && chanceStraight == 1) {
+			chanceStraightFlush = 1;
+		}
 		switch (round) {
 		case flop:
-			chancePair = rules.chancePair(cardsOnHand, cardsOnBoard, round);
 			if (chancePair > 0) {
-				chanceTwoPair = rules.chanceTwoPair(cardsOnHand, cardsOnBoard, round);
-				chanceThreeOaK = rules.chanceTreeOaK(cardsOnHand, cardsOnBoard, round);
-				chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
+				chanceToWin += chancePair;
+				chanceToWin += chanceTwoPair;
+				chanceToWin += chanceThreeOaK;
+				chanceToWin += chanceFourOaK;
 			}
-			chanceFlush = rules.chanceFlush(cardsOnHand, cardsOnBoard, round);
-			chanceStraight = rules.chanceStraight(cardsOnHand, cardsOnBoard, round);
+			chanceToWin += chanceStraight;
 		}
-		return 0;
+		return chanceToWin;
 	}
 
 	/**

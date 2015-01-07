@@ -1,9 +1,5 @@
 package control;
 
-import java.util.ArrayList;
-
-import model.Card;
-import model.Card.Value;
 import model.Player;
 /**
  * Implements the interface to make the moves for the players.
@@ -13,10 +9,8 @@ import model.Player;
  */
 public class PlayerMovesImpl implements PlayerMoves {
 	private BoardHandler boardHandler;
-	private PointCounter pointCounter;
-	public PlayerMovesImpl(BoardHandler boardHandler, PointCounter pointCounter) {
+	public PlayerMovesImpl(BoardHandler boardHandler) {
 		this.boardHandler = boardHandler;
-		this.pointCounter = pointCounter;
 	}
 	@Override
 	public int fold(Player player) {

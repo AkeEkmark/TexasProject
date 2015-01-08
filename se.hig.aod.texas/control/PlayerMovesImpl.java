@@ -9,23 +9,25 @@ import model.Player;
  */
 public class PlayerMovesImpl implements PlayerMoves {
 	private BoardHandler boardHandler;
-	public PlayerMovesImpl(BoardHandler boardHandler) {
+	private Logger logger;
+	public PlayerMovesImpl(BoardHandler boardHandler, Logger logger) {
 		this.boardHandler = boardHandler;
+		this.logger = logger;
 	}
 	@Override
 	public int fold(Player player) {
-		System.out.println(player.getName() +" is folding");
+		logger.addString(player.getName() +" is folding");
 		return -1;
 		
 	}
 	@Override
 	public int check(Player player) {
-		System.out.println(player.getName() +" is checking");
+		logger.addString(player.getName() +" is checking");
 		return 0;
 	}
 	@Override
 	public int call(Player player) {
-		System.out.println(player.getName() +" is calling");
+		logger.addString(player.getName() +" is calling");
 		player.removeBlind();
 		boardHandler.getBoard().addBlind(1);
 		return 1;

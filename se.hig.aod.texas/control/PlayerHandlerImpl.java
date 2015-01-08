@@ -22,7 +22,7 @@ public class PlayerHandlerImpl implements PlayerHandler {
 //		createHumanPlayer("Player", 1);
 		for (int i = 0; i < nbrOfOpponents; i++) {
 			String Computername = "Computer"+(i+1);
-			createComputerPlayer(Computername, i+2, difficulty);
+			createComputerPlayer(Computername, i+2, difficulty+i);
 		}
 	}
 	@Override

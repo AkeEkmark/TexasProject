@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @param turnEnded : a boolean to register if the player has ended his turn
  */
 public abstract class Player {
-	protected int blinds = 100;
+	protected int blinds = 50;
 	protected int position;
 	protected String name;
 	protected ArrayList<Card> cardsOnHand;

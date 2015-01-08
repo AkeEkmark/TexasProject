@@ -1,6 +1,6 @@
 package control;
 
-
+import java.io.IOException;
 
 import model.Card;
 import model.Player;
@@ -12,6 +12,7 @@ import model.Player;
 public class GameHandler{
 	private GameCreator gameCreator;
 	private Rules rules;
+	private Logger logger;
 	private int round;
 	private int stage;
 	private Player comp1;
@@ -25,18 +26,29 @@ public class GameHandler{
 		gameCreator = new GameCreator(nbrOfOpponents, difficulty);
 		gameCreator.createHandlers();
 		rules = gameCreator.getRules();
+		logger = gameCreator.getLogger();
 		comp1 = gameCreator.getPlayerHandler().getPlayers().get(0);
 		comp2 = gameCreator.getPlayerHandler().getPlayers().get(1);
+		System.out.println("Game Begins");
+		int games = 0;
 		while (comp1.getBlinds() > 0 && comp2.getBlinds() > 0){
 			playGame();
+			games++;
 		}
-		System.out.println("Someone won !");
-		System.out.println("Computer 1 has " +comp1.getBlinds() +"blinds");
-		System.out.println("Computer 2 has " +comp2.getBlinds() +"blinds");
+		logger.addString("Someone won ! after "+games +"nbr of games");
+		logger.addString("Computer 1 has " +comp1.getBlinds() +"blinds");
+		logger.addString("Computer 2 has " +comp2.getBlinds() +"blinds");
+		try {
+			logger.endString();
+		} catch (IOException e) {
+			System.out.println("File was not found, game was not saved.");
+			e.printStackTrace();
+		}
+		System.out.println("Game Ended");
 	}
 	private void playGame() {
-		System.out.println("Computer 1 has " +comp1.getBlinds() +"blinds");
-		System.out.println("Computer 2 has " +comp2.getBlinds() +"blinds");
+		logger.addString("Computer 1 has " +comp1.getBlinds() +"blinds");
+		logger.addString("Computer 2 has " +comp2.getBlinds() +"blinds");
 		setUpGame();
 		int move= 0;
 		Player winner = null;
@@ -47,9 +59,9 @@ public class GameHandler{
 		while (gameGoing) {
 			//pre-flop
 			for (Player player : gameCreator.getPlayerHandler().getPlayers()) {
-				System.out.println(player.getName());
+				logger.addString(player.getName());
 				player.setOpponentHandStrength(3.0);
-				player.setMyHandStrength(gameCreator.getRules().chenFormula(player.getCardsOnHand()));
+				player.setMyHandStrength(rules.chenFormula(player.getCardsOnHand()));
 			}
 			comp1.removeBlind();
 			comp2.removeBlind();
@@ -58,8 +70,8 @@ public class GameHandler{
 			while ((stage < 4 && round < 4) && gameGoing) {
 				
 				if (round == 1 && gameCreator.getBoardHandler().getCardsOnBoard().size() < 3 ) {
-					System.out.println();
-					System.out.println("Here comes the flop");
+					logger.addString("");
+					logger.addString("Here comes the flop");
 					move = 0;
 					cTurn++;
 					for (int i = 0; i < 3; i++) {
@@ -69,8 +81,8 @@ public class GameHandler{
 					printBoard();
 				}
 				if (round == 2 && gameCreator.getBoardHandler().getCardsOnBoard().size() < 4) {
-					System.out.println();
-					System.out.println("Here comes the turn");
+					logger.addString("");
+					logger.addString("Here comes the turn");
 					cTurn++;
 					move = 0;
 					gameCreator.getBoardHandler().addCardtoBoard(gameCreator.getDeckHandler().getCard(0));
@@ -78,20 +90,20 @@ public class GameHandler{
 					printBoard();
 				}
 				if (round == 3 && gameCreator.getBoardHandler().getCardsOnBoard().size() < 5) {
-					System.out.println();
-					System.out.println("Here comes the river");
+					logger.addString("");
+					logger.addString("Here comes the river");
 					cTurn++;
 					move = 0;
 					gameCreator.getBoardHandler().addCardtoBoard(gameCreator.getDeckHandler().getCard(0));
 					printPlayersHands();
 					printBoard();
 				}
-				System.out.println();
-				System.out.println("round: " +round);
-				System.out.println("stage : " + stage);
-				System.out.println("Blinds in pot = " +gameCreator.getBoardHandler().getBoard().getBlinds());
+				logger.addString("");
+				logger.addString("round: " +round);
+				logger.addString("stage : " + stage);
+				logger.addString("Blinds in pot = " +gameCreator.getBoardHandler().getBoard().getBlinds());
 				compTurn = gameCreator.getPlayerHandler().getPlayers().get(cTurn%2);
-				System.out.println("Player making a move is :" + compTurn.getName());
+				logger.addString("Player making a move is :" + compTurn.getName());
 				switch (move) {
 				case FOLD:
 					winner = compTurn;
@@ -101,7 +113,7 @@ public class GameHandler{
 				case CHECK:
 					move = gameCreator.getAiControl().makeMove(compTurn, round, stage, move);
 					if (move == 2) {
-						System.out.println(compTurn.getName() +" is betting");
+						logger.addString(compTurn.getName() +" is betting");
 					}
 					cTurn++;
 					stage++;
@@ -123,7 +135,7 @@ public class GameHandler{
 					compTurn.setOpponentHandStrength(compTurn.getOpponentHandStrength() + 2.0);
 					move = gameCreator.getAiControl().makeMove(compTurn, round, stage, move);
 					if (move == 2) {
-						System.out.println(compTurn.getName() +" is reraising");
+						logger.addString(compTurn.getName() +" is reraising");
 					}
 					cTurn++;
 					stage++;
@@ -133,27 +145,25 @@ public class GameHandler{
 			if (winner == null) {
 				winner = checkWinner();
 				gameGoing = false;
-			}
-			
-			
+			}	
 		}
 		endGame(winner);		
 	}
 	private void printPlayersHands() {
-		System.out.println(comp1.getName());
+		logger.addString(comp1.getName());
 		for (Card card : comp1.getCardsOnHand()) {
-			System.out.println(card);
+			logger.addString((card.toString()));
 		}
-		System.out.println();
-		System.out.println(comp2.getName());
+		logger.addString("");
+		logger.addString(comp2.getName());
 		for (Card card : comp2.getCardsOnHand()) {
-			System.out.println(card);
+			logger.addString(card.toString());
 		}
-		System.out.println();
+		logger.addString("");
 	}
 	private void printBoard() {
 		for (Card card : gameCreator.getBoardHandler().getCardsOnBoard()) {
-			System.out.println("Card on the board : " +card);
+			logger.addString("Card on the board : " +card);
 		}
 	}
 	private Player checkWinner() {
@@ -245,16 +255,16 @@ public class GameHandler{
 	private void endGame(Player winner) {
 		int winnings = gameCreator.getBoardHandler().getBoard().getBlinds();
 		if (winner == null) {
-			System.out.println("No winner, they split the pot");
-			System.out.println("The pot is "+ winnings);
-			comp1.addBlinds(winnings/2);
+			logger.addString("No winner, they split the pot");
+			logger.addString("The pot is "+ winnings);
+			comp1.addBlinds(Math.round(winnings/2));
 			comp2.addBlinds(winnings/2);
 		}
 		else {
-			System.out.println("Player " + winner.getName() +" won");
+			logger.addString("Player " + winner.getName() +" won");
 			
 			winner.addBlinds(winnings);
-			System.out.println("the winnings were: " + winnings);
+			logger.addString("the winnings were: " + winnings);
 		}
 		
 		

@@ -1,14 +1,10 @@
 package control;
 
-
-
 import java.util.ArrayList;
 import java.util.Random;
 
 import model.Board;
 import model.Card;
-import model.Card.Suit;
-import model.Card.Value;
 import model.ComputerPlayer;
 import model.Player;
 
@@ -25,16 +21,18 @@ public class AiControl {
 	private Board board;
 	private PlayerMoves playerMoves;
 	private Rules rules;
-	private static final int preFlop = 0, first = 0;
-	private static final int byTheBook = 1, flop = 1, second = 1;
+	private Logger logger;
+	private static final int preFlop = 0;
+	private static final int byTheBook = 1, flop = 1;
 	private static final int bluffer = 2, turn = 2, third = 2;
 	private static final int river = 3;
 
 	public AiControl(BoardHandler boardHandler, PlayerMoves playerMoves,
-			Rules rules) {
+			Rules rules, Logger logger) {
 		this.board = boardHandler.getBoard();
 		this.playerMoves = playerMoves;
 		this.rules = rules;
+		this.logger = logger;
 		random = new Random();
 	}
 
@@ -49,9 +47,9 @@ public class AiControl {
 	 * @return a string describing the move the player did.
 	 */
 	public int makeMove(Player player, int round, int stage, int cMove) {
+		int rPreFlop = random.nextInt(3);
+		int rPostFlop = random.nextInt(2);
 		int move = 0;
-		int position = player.getPosition();
-		int nbrBlinds = board.getBlinds();
 		double opponentHandStrength = player.getOpponentHandStrength();
 		double myHandStrength = player.getMyHandStrength();
 		double postFlopScore;
@@ -81,90 +79,81 @@ public class AiControl {
 						move = playerMoves.check(player);
 					}
 				}
-				
+
 				break;
 			case flop:
 				postFlopScore = analyzeCards(round, player);
-				System.out.println("Chance to win is : " + postFlopScore);
+				logger.addString("postFlopScore is : " + postFlopScore);
 				if (postFlopScore > 1) {
 					if (stage == third) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.raise(player);
 					}
 				} else if (postFlopScore > 0) {
 					if (cMove == 2) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.check(player);
 					}
-					
+
 				} else {
 					if (stage == 0 || (stage == 1 && cMove == 0)) {
 						move = playerMoves.check(player);
-					}
-					else {
+					} else {
 						move = playerMoves.fold(player);
 					}
-					
+
 				}
 				break;
 			case turn:
 				postFlopScore = analyzeCards(round, player);
-				System.out.println("Chance to win is : " + postFlopScore);
+				logger.addString("postFlopScore is : " + postFlopScore);
 				if (postFlopScore > 1) {
 					if (stage == third) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.raise(player);
 					}
 				} else if (postFlopScore > 0) {
 					if (cMove == 2) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.check(player);
 					}
-					
+
 				} else {
 					if (stage == 0 || (stage == 1 && cMove == 0)) {
 						move = playerMoves.check(player);
-					}
-					else {
+					} else {
 						move = playerMoves.fold(player);
 					}
-					
+
 				}
 				break;
 			case river:
 				postFlopScore = analyzeCards(round, player);
-				System.out.println("Chance to win is : " + postFlopScore);
+				logger.addString("postFlopScore is : " + postFlopScore);
 				if (postFlopScore > 1) {
 					if (stage == third) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.raise(player);
 					}
 				} else if (postFlopScore > 0) {
 					if (cMove == 2) {
 						move = playerMoves.call(player);
-					}
-					else {
+					} else {
 						move = playerMoves.check(player);
 					}
-					
+
 				} else {
 					if (stage == 0 || (stage == 1 && cMove == 0)) {
 						move = playerMoves.check(player);
-					}
-					else {
+					} else {
 						move = playerMoves.fold(player);
 					}
-					
+
 				}
 				break;
 			default:
@@ -173,7 +162,114 @@ public class AiControl {
 
 			break;
 		case bluffer:
+			switch (round) {
+			case preFlop:
+				logger.addString("Random bluffrange : " +rPreFlop);
+				if (opponentHandStrength >= 5) {
+					if (myHandStrength >= 7-rPreFlop) {
+						if (stage == third) {
+							move = playerMoves.call(player);
+						} else {
+							move = playerMoves.raise(player);
+						}
 
+					} else if (myHandStrength >= 3-rPreFlop) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.fold(player);
+					}
+				} else {
+					if (myHandStrength >= 3.5-rPreFlop) {
+						move = playerMoves.raise(player);
+					} else {
+						move = playerMoves.check(player);
+					}
+				}
+
+				break;
+			case flop:
+				postFlopScore = analyzeCards(round, player);
+				logger.addString("postFlopScore is : " + postFlopScore);
+				logger.addString("Random bluffrange : " +rPostFlop);
+				if (postFlopScore > 1-rPostFlop) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0-rPostFlop) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.check(player);
+					}
+
+				} else {
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					} else {
+						move = playerMoves.fold(player);
+					}
+
+				}
+				break;
+			case turn:
+				postFlopScore = analyzeCards(round, player);
+				logger.addString("postFlopScore is : " + postFlopScore);
+				logger.addString("Random bluffrange : " +rPostFlop);
+				
+				if (postFlopScore > 1-rPostFlop) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0-rPostFlop) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.check(player);
+					}
+
+				} else {
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					} else {
+						move = playerMoves.fold(player);
+					}
+
+				}
+				break;
+			case river:
+				postFlopScore = analyzeCards(round, player);
+				logger.addString("postFlopScore is : " + postFlopScore);
+				logger.addString("Random bluffrange : " +rPostFlop);
+				
+				if (postFlopScore > 1-rPostFlop) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0-rPostFlop) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					} else {
+						move = playerMoves.check(player);
+					}
+
+				} else {
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					} else {
+						move = playerMoves.fold(player);
+					}
+
+				}
+				break;
+			default:
+				break;
+			}
 			break;
 		case 3:
 
@@ -193,7 +289,7 @@ public class AiControl {
 		double chanceThreeOaK = 0;
 		double chanceStraight = 0;
 		double chanceFlush = 0;
-		//double chanceFullHouse = 0;
+		// double chanceFullHouse = 0;
 		double chanceFourOaK = 0;
 		double chanceStraightFlush = 0;
 		chancePair = rules.chancePair(cardsOnHand, cardsOnBoard, round);
@@ -202,7 +298,7 @@ public class AiControl {
 		chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
 		chanceFlush = rules.chanceFlush(cardsOnHand, cardsOnBoard, round);
 		chanceStraight = rules.chanceStraight(cardsOnHand, cardsOnBoard, round);
-		//chanceFullHouse = rules.chanceFullHouse(cardsOnHand, cardsOnBoard, round); 
+		// chanceFullHouse = rules.chanceFullHouse(cardsOnHand, cardsOnBoard, round);
 		if (chanceFlush == 1 && chanceStraight > 1) {
 			chanceStraightFlush = 5;
 		}
@@ -215,37 +311,10 @@ public class AiControl {
 		postFlopscore += chanceStraight;
 		postFlopscore += chanceFlush;
 		postFlopscore += chanceStraightFlush;
-		
+
 		if (player.getMyHandStrength() > 5 && postFlopscore == 0) {
 			postFlopscore++;
 		}
 		return postFlopscore;
-	}
-
-	/**
-	 * An inner class to save the possible moves.
-	 * 
-	 * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
-	 * 
-	 */
-	public class AvaliableHands {
-		private ArrayList<Card> cardsOnBoard;
-		private int points;
-		private double chanceToHit;
-
-		public AvaliableHands(double chanceToHit, ArrayList<Card> cardsOnBoard, int points) {
-			this.chanceToHit = chanceToHit;
-			this.cardsOnBoard = cardsOnBoard;
-			this.points = points;
-		}
-		public ArrayList<Card> getCardsOnBoard() {
-			return cardsOnBoard;
-		}
-		public int getPoints() {
-			return points;
-		}
-		public double getChance() {
-			return chanceToHit;
-		}
 	}
 }

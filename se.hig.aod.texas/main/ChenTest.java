@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.Card;
 import model.Deck;
+import control.Logger;
 import control.Rules;
 
 public class ChenTest {
@@ -16,7 +17,7 @@ public class ChenTest {
 			cards.add(deck.getCard(0));
 			cards.add(deck.getCard(0));
 			
-			Rules rules = new Rules();
+			Rules rules = new Rules(new Logger());
 			double score = rules.chenFormula(cards);
 			if (score <= 0) {
 				spread[0]++;

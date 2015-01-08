@@ -17,6 +17,7 @@ public class GameCreator {
 	private PointCounter pointCounter;
 	private AiControl aiControl;
 	private Rules rules;
+	private Logger logger;
 	private int nbrOfOpponents;
 	private int difficulty;
 
@@ -27,13 +28,15 @@ public class GameCreator {
 	}
 
 	public void createHandlers() {
-		rules = new Rules();
+		logger = new Logger();
+		rules = new Rules(logger);
 		deckHandler = new DeckHandlerImpl();
 		boardHandler = new BoardHandlerImpl();
 		playerHandler = new PlayerHandlerImpl(nbrOfOpponents, difficulty, boardHandler);
 		pointCounter = new PointCounter(boardHandler);
-		playerMoves = new PlayerMovesImpl(boardHandler);
-		aiControl = new AiControl(boardHandler, playerMoves, rules);
+		playerMoves = new PlayerMovesImpl(boardHandler, logger);
+		aiControl = new AiControl(boardHandler, playerMoves, rules, logger);
+		
 	}
 
 	public BoardHandler getBoardHandler() {
@@ -68,5 +71,8 @@ public class GameCreator {
 	}
 	public Rules getRules() {
 		return rules;
+	}
+	public Logger getLogger() {
+		return logger;
 	}
 }

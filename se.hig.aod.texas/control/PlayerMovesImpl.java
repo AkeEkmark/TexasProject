@@ -32,7 +32,6 @@ public class PlayerMovesImpl implements PlayerMoves {
 	}
 	@Override
 	public int raise(Player player) {
-		System.out.println(player.getName() +" is raising");
 		player.removeBlind();
 		boardHandler.getBoard().addBlind(1);
 		return 2;

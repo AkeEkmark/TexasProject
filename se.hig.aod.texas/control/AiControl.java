@@ -48,13 +48,13 @@ public class AiControl {
 	 *            : the computer-player to make the move for.
 	 * @return a string describing the move the player did.
 	 */
-	public int makeMove(Player player, int round, int stage) {
+	public int makeMove(Player player, int round, int stage, int cMove) {
 		int move = 0;
 		int position = player.getPosition();
 		int nbrBlinds = board.getBlinds();
 		double opponentHandStrength = player.getOpponentHandStrength();
 		double myHandStrength = player.getMyHandStrength();
-		double chanceToWin;
+		double postFlopScore;
 		difficulty = ((ComputerPlayer) player).getDifficulty();
 
 		switch (difficulty) {
@@ -84,18 +84,88 @@ public class AiControl {
 				
 				break;
 			case flop:
-				chanceToWin = analyzeCards(round, player);
-				if (chanceToWin > 70) {
-					move = playerMoves.raise(player);
-				} else if (chanceToWin > 50) {
-					move = playerMoves.check(player);
+				postFlopScore = analyzeCards(round, player);
+				System.out.println("Chance to win is : " + postFlopScore);
+				if (postFlopScore > 1) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.check(player);
+					}
+					
 				} else {
-					move = playerMoves.fold(player);
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					}
+					else {
+						move = playerMoves.fold(player);
+					}
+					
 				}
 				break;
 			case turn:
+				postFlopScore = analyzeCards(round, player);
+				System.out.println("Chance to win is : " + postFlopScore);
+				if (postFlopScore > 1) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.check(player);
+					}
+					
+				} else {
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					}
+					else {
+						move = playerMoves.fold(player);
+					}
+					
+				}
 				break;
 			case river:
+				postFlopScore = analyzeCards(round, player);
+				System.out.println("Chance to win is : " + postFlopScore);
+				if (postFlopScore > 1) {
+					if (stage == third) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.raise(player);
+					}
+				} else if (postFlopScore > 0) {
+					if (cMove == 2) {
+						move = playerMoves.call(player);
+					}
+					else {
+						move = playerMoves.check(player);
+					}
+					
+				} else {
+					if (stage == 0 || (stage == 1 && cMove == 0)) {
+						move = playerMoves.check(player);
+					}
+					else {
+						move = playerMoves.fold(player);
+					}
+					
+				}
 				break;
 			default:
 				break;
@@ -117,13 +187,13 @@ public class AiControl {
 	private double analyzeCards(int round, Player player) {
 		ArrayList<Card> cardsOnHand = player.getCardsOnHand();
 		ArrayList<Card> cardsOnBoard = board.getCardsOnBoard();
-		int chanceToWin = 0;
+		int postFlopscore = 0;
 		double chancePair = 0;
 		double chanceTwoPair = 0;
 		double chanceThreeOaK = 0;
 		double chanceStraight = 0;
 		double chanceFlush = 0;
-		double chanceFullHouse = 0;
+		//double chanceFullHouse = 0;
 		double chanceFourOaK = 0;
 		double chanceStraightFlush = 0;
 		chancePair = rules.chancePair(cardsOnHand, cardsOnBoard, round);
@@ -132,21 +202,24 @@ public class AiControl {
 		chanceFourOaK = rules.chanceFourOaK(cardsOnHand, cardsOnBoard, round);
 		chanceFlush = rules.chanceFlush(cardsOnHand, cardsOnBoard, round);
 		chanceStraight = rules.chanceStraight(cardsOnHand, cardsOnBoard, round);
-		chanceFullHouse = rules.chanceFullHouse(cardsOnHand, cardsOnBoard, round); 
-		if (chanceFlush == 1 && chanceStraight == 1) {
-			chanceStraightFlush = 1;
+		//chanceFullHouse = rules.chanceFullHouse(cardsOnHand, cardsOnBoard, round); 
+		if (chanceFlush == 1 && chanceStraight > 1) {
+			chanceStraightFlush = 5;
 		}
-		switch (round) {
-		case flop:
-			if (chancePair > 0) {
-				chanceToWin += chancePair;
-				chanceToWin += chanceTwoPair;
-				chanceToWin += chanceThreeOaK;
-				chanceToWin += chanceFourOaK;
-			}
-			chanceToWin += chanceStraight;
+		if (chancePair > 0) {
+			postFlopscore += chancePair;
+			postFlopscore += chanceTwoPair;
+			postFlopscore += chanceThreeOaK;
+			postFlopscore += chanceFourOaK;
 		}
-		return chanceToWin;
+		postFlopscore += chanceStraight;
+		postFlopscore += chanceFlush;
+		postFlopscore += chanceStraightFlush;
+		
+		if (player.getMyHandStrength() > 5 && postFlopscore == 0) {
+			postFlopscore++;
+		}
+		return postFlopscore;
 	}
 
 	/**

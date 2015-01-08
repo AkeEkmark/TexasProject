@@ -204,13 +204,13 @@ public class Rules {
 				}
 			}
 			if (cardsWithSuit == 5) {
-				return 1;
+				return 3;
 			}
 			if (cardsWithSuit == 3 && round == 1) {
 				return 0.5;
 			}
 			if (cardsWithSuit == 4 && round != 3) {
-				return 0.75;
+				return 2;
 			}
 			else {
 				return 0;
@@ -229,13 +229,13 @@ public class Rules {
 				}
 			}
 			if (cardsWithSuit == 5 || cardsWithSuit2 == 5) {
-				return 1;
+				return 2;
 			}
 			if ((cardsWithSuit == 3 || cardsWithSuit2 == 3) && round == 1) {
 				return 0.5;
 			}
 			if ((cardsWithSuit == 4 || cardsWithSuit2 == 4) && round != 3) {
-				return 0.75;
+				return 2;
 			}
 			else {
 				return 0;
@@ -262,31 +262,56 @@ public class Rules {
 			}
 		}
 		if (ace) {
-			
+			int aceValue = 14;
+			for (int i = 1; i < sortedList.size(); i++) {
+				if (sortedList.get(sortedList.size()-i).getValue().value() == aceValue-i) {
+					if (cardsInStraight == 0) {
+						straight.add(sortedList.get(i-1));
+						cardsInStraight++;
+					}
+					if (sortedList.get(sortedList.size()-i).getValue().value() - straight.get(cardsInStraight-1).getValue().value() == 1) {
+						straight.add(sortedList.get(sortedList.size()-i));
+						cardsInStraight++;
+					}
+					
+				}
+			}
+			if 	(straight.contains(cardOnHand1) || straight.contains(cardOnHand2) ) {
+				points = 1;
+				if (straight.containsAll(cardsOnHand)) {
+					points = 2;
+				}
+			}
+			if (cardsInStraight > 4 && round == 3) {
+				return 1*points;
+			}
+			if (cardsInStraight > 3 && round < 3) {
+				return 1*points;
+			}
 		}
-		else {
-			
-		}
+		points = 0;
+		cardsInStraight = 0;
+		straight.clear();
 		for (int i = 1; i < sortedList.size(); i++) {
 			if (sortedList.get(i).getValue().value() - sortedList.get(i-1).getValue().value() == 1 ) {
 				if (cardsInStraight == 0) {
 					straight.add(sortedList.get(i-1));
 					cardsInStraight++;
 				}
-				straight.add(sortedList.get(i));
-				cardsInStraight++;
+				if (sortedList.get(i).getValue().value() - straight.get(cardsInStraight-1).getValue().value() == 1) {
+					straight.add(sortedList.get(i));
+					cardsInStraight++;
+				}
 			}
 		}
 		
 		
-		if 	(straight.contains(cardOnHand1) || straight.contains(cardOnHand2) ) {
-			points = 1;
-			if (straight.containsAll(cardsOnHand)) {
-				points = 2;
-			}
+		if (cardsInStraight > 4 && round == 3) {
+			return 1*points;
 		}
-		
-			
+		if (cardsInStraight > 3 && round < 3) {
+			return 1*points;
+		}
 		
 		return 0;
 	}

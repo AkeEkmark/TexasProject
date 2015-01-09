@@ -20,7 +20,7 @@ public class Logger {
 	}
 	public void writeToFile(String contents) throws IOException {
 		Writer output = null;
-		output = new BufferedWriter(new FileWriter("file.txt"));
+		output = new BufferedWriter(new FileWriter("game.txt"));
 		output.write(contents); // skriver ut till file.txt
 		output.close();
 

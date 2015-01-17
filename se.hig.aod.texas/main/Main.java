@@ -12,11 +12,11 @@ import control.GameHandler;
 
 
 public class Main {
-
+	static GameHandler gameHandler;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GameHandler gameHandler = new GameHandler(2, 1);
+		gameHandler = new GameHandler(2, 1);
 	}
 }

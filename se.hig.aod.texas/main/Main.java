@@ -5,7 +5,7 @@ import control.GameHandler;
 
 /**
  * Main class of our program
- * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
+ * @author Åke Ekmark, Andreas Wieselqvist.
  *
  */
 

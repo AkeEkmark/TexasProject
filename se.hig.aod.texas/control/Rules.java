@@ -125,8 +125,11 @@ public class Rules {
 			}
 		}
 		
+		if (chance == 1) {
+			return chance;
+		}
+		return 0;
 		
-		return chance;
 	}
 
 	public double chanceTreeOaK(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
@@ -261,24 +264,37 @@ public class Rules {
 		sortedList.add(cardOnHand1);
 		sortedList.addAll(cardsOnBoard);
 		Collections.sort(sortedList);
+		
 		for (Card card : sortedList) {
 			if (card.getValue() == model.Card.Value.ACE) {
 				ace = true;
 			}
 		}
 		if (ace) {
-			int aceValue = 14;
-			for (int i = 1; i < sortedList.size(); i++) {
-				if (sortedList.get(sortedList.size()-i).getValue().value() == aceValue-i) {
-					if (cardsInStraight == 0) {
-						straight.add(sortedList.get(i-1));
-						cardsInStraight++;
+			straight.add(sortedList.get(0));
+			cardsInStraight++;
+			for (Card king : sortedList) {
+				if (king.getValue() == model.Card.Value.KING) {
+					straight.add(king);
+					cardsInStraight++;
+					for (Card queen : sortedList) {
+						if (queen.getValue() == model.Card.Value.QUEEN) {
+							straight.add(queen);
+							cardsInStraight++;
+							for (Card jack : sortedList) {
+								if (jack.getValue() == model.Card.Value.JACK) {
+									straight.add(jack);
+									cardsInStraight++;
+									for (Card ten : sortedList) {
+										if (ten.getValue() == model.Card.Value.TEN) {
+											straight.add(ten);
+											cardsInStraight++;
+										}
+									}
+								}
+							}		
+						}
 					}
-					if (sortedList.get(sortedList.size()-i).getValue().value() - straight.get(cardsInStraight-1).getValue().value() == 1) {
-						straight.add(sortedList.get(sortedList.size()-i));
-						cardsInStraight++;
-					}
-					
 				}
 			}
 			if 	(straight.contains(cardOnHand1) || straight.contains(cardOnHand2) ) {
@@ -310,7 +326,12 @@ public class Rules {
 			}
 		}
 		
-		
+		if 	(straight.contains(cardOnHand1) || straight.contains(cardOnHand2) ) {
+			points = 1;
+			if (straight.containsAll(cardsOnHand)) {
+				points = 2;
+			}
+		}
 		if (cardsInStraight > 4 && round == 3) {
 			return 1*points;
 		}

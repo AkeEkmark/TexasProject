@@ -1,6 +1,7 @@
 package control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import model.Card;
 import model.Player;
@@ -170,52 +171,53 @@ public class GameHandler{
 		int comp1StraightFlush = 0;
 		int comp2StraightFlush = 0;
 		double check;
+		ArrayList<Card> board = gameCreator.getBoardHandler().getCardsOnBoard();
 		//check for pairs
-		check = rules.chancePair(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chancePair(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 1;
 		}
-		check = rules.chancePair(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chancePair(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 1;
 		}
 		
 		//check for two pairs
-		check = rules.chanceTwoPair(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceTwoPair(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 2;
 		}
-		check = rules.chanceTwoPair(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceTwoPair(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 2;
 		}
 		//check for three of a kind
-		check = rules.chanceTreeOaK(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceTreeOaK(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 3;
 		}
-		check = rules.chanceTreeOaK(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceTreeOaK(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 3;
 		}
 		//check for straight
-		check = rules.chanceStraight(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceStraight(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 4;
 			comp1StraightFlush++;
 		}
-		check = rules.chanceStraight(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceStraight(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 4;
 			comp2StraightFlush++;
 		}
 		//check for flush
-		check = rules.chanceFlush(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceFlush(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 5;
 			comp1StraightFlush++;
 		}
-		check = rules.chanceFlush(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceFlush(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 5;
 			comp2StraightFlush++;
@@ -223,11 +225,11 @@ public class GameHandler{
 		//check for full house
 		
 		//check for four of a kind
-		check = rules.chanceFourOaK(comp1.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceFourOaK(comp1.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp1Score = 7;
 		}
-		check = rules.chanceFourOaK(comp2.getCardsOnHand(), gameCreator.getBoardHandler().getCardsOnBoard(), round);
+		check = rules.chanceFourOaK(comp2.getCardsOnHand(), board, round);
 		if (check > 0) {
 			comp2Score = 7;
 		}

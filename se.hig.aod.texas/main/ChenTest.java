@@ -6,7 +6,11 @@ import model.Card;
 import model.Deck;
 import control.Logger;
 import control.Rules;
-
+/**
+ * A class to test the chen formula for the spread of hands.
+ * @author Åke Ekmark, Andreas Wieselqvist
+ *
+ */
 public class ChenTest {
 	public static void main(String[] args) {
 		double [] spread = new double [41];

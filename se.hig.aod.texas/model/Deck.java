@@ -57,13 +57,5 @@ public class Deck {
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-	/**
-	 * takes a card and puts it back in the deck.
-	 * Also sets i to notSelected.
-	 * @param card the card to put back in the deck
-	 */
-	public void returnCard(Card card) {
-		card.setNotSelected();
-		deck.add(card);
-	}
+
 }

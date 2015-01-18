@@ -4,7 +4,7 @@ import model.Card;
 import model.Deck;
 /**
  * Implementation of the interface to control the deck and keep a reference of the deck.
- * @author Åke
+ * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
  *
  */
 public class DeckHandlerImpl implements DeckHandler {

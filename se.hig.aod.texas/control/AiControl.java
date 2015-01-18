@@ -37,14 +37,11 @@ public class AiControl {
 	}
 
 	/**
-	 * Analyses the players hand and the board to come up with possible moves.
-	 * If there are no moves it plays a card from the hand to the board. The
-	 * difficulty of the computer-player determines how "smart" the move will
+	 * Analyses the players hand and the board to come up with a move for the computer.
+	 * The difficulty of the computer-player determines how "smart" the move will
 	 * be.
-	 * 
-	 * @param player
-	 *            : the computer-player to make the move for.
-	 * @return a string describing the move the player did.
+	 * @param player : the computer-player to make the move for.
+	 * @return an int representing the move the computer made.
 	 */
 	public int makeMove(Player player, int round, int stage, int cMove) {
 		int rPreFlop = random.nextInt(3);
@@ -56,6 +53,7 @@ public class AiControl {
 		difficulty = ((ComputerPlayer) player).getDifficulty();
 
 		switch (difficulty) {
+		// a player that plays conservatively and folds pretty easy.
 		case byTheBook:
 			switch (round) {
 			case preFlop:
@@ -161,6 +159,7 @@ public class AiControl {
 			}
 
 			break;
+			// a player that sometimes bluffs and shows a stronger hand then he has.
 		case bluffer:
 			switch (round) {
 			case preFlop:
@@ -279,7 +278,11 @@ public class AiControl {
 		}
 		return move;
 	}
-
+/**
+ * A method to analyze the cards of the player and the board to see
+ * if the player has any "hands"
+ * @return a score based on how good cards the player has.
+ */
 	private double analyzeCards(int round, Player player) {
 		ArrayList<Card> cardsOnHand = player.getCardsOnHand();
 		ArrayList<Card> cardsOnBoard = board.getCardsOnBoard();

@@ -6,7 +6,6 @@ package model;
  * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
  * @param Suit : enum for the suit of the card.
  * @param Value : enum for the the value of the card.
- * @param isSelected : boolean if the card is selected in the gui.
  * @param fileName : the filename for the image of the card
  */
 public class Card implements Comparable<Card>{
@@ -27,7 +26,6 @@ public class Card implements Comparable<Card>{
 	private Suit suit;
 	private Value value;
 	private String fileName;
-	private boolean isSelected;
 	/**
 	 * Constructor.
 	 * @param suit : suit of the card
@@ -38,7 +36,6 @@ public class Card implements Comparable<Card>{
 		this.suit = suit;
 		this.value = value;
 		this.fileName = fileName;
-		this.isSelected = false;
 	}
 	/**
 	 * 
@@ -68,24 +65,8 @@ public class Card implements Comparable<Card>{
 		return value +" of " +suit;
 	}
 	/**
-	 * 
-	 * @return if the card is selected
+	 * Used to sort cards.
 	 */
-	public boolean isSelected() {
-		return isSelected;
-	}
-	/**
-	 * isSelected = true;
-	 */
-	public void setSelected() {
-		isSelected = true;
-	}
-	/**
-	 * isSelected = false;
-	 */
-	public void setNotSelected() {
-		isSelected = false;
-	}
 	@Override
 	public int compareTo(Card o) {
 		if (this.getValue().value() == o.getValue().value()) {

@@ -7,8 +7,7 @@ import model.Board;
 import model.Card;
 /**
  * Implementation of the interface to control the board and keep a reference of the board.
- * Can also add and remove gui elements from the board.
- * @author Åke
+ * @author Åke Ekmark, Andreas Wieselqvist
  *
  */
 public class BoardHandlerImpl implements BoardHandler {

@@ -10,24 +10,16 @@ import java.util.ArrayList;
  * @param position : position on the board
  * @param name : the name of the player
  * @param cardsOnHand : an arrayList of the cards the player has on his hand.
- * @param cardsInPile : an arraylist of the cards the player has in his pile.
- * @param turnEnded : a boolean to register if the player has ended his turn
+ *  
  */
 public abstract class Player {
 	protected int blinds = 50;
 	protected int position;
 	protected String name;
 	protected ArrayList<Card> cardsOnHand;
-	protected boolean turnEnded = false;
 	protected double myHandStrength;
 	protected double opponentHandStrength;
-	
-	public boolean isTurnEnded() {
-		return turnEnded;
-	}
-	public void setTurnEnded(boolean turnEnded) {
-		this.turnEnded = turnEnded;
-	}
+
 	public void addBlinds(int blinds) {
 		this.blinds += blinds;
 	}

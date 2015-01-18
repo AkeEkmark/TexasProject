@@ -6,12 +6,22 @@ import java.util.Collections;
 
 import model.Card;
 
+/**
+ * A class containing methods for checking cards and returning a score based on the 
+ * cards. 
+ * @author Åke Ekmark, Andreas Wieselqvist.
+ *
+ */
 public class Rules {
 	private Logger logger;
 	public Rules(Logger logger) {
 		this.logger = logger;
 	}
-
+/**
+ * An algorithm to calculate a score based on the starting hand in texas holdem.
+ * @param cards : the cards you want to calculate score for, max 2 cards.
+ * @return
+ */
 	public double chenFormula(ArrayList<Card> cards) {
 		Card card1 = cards.get(0);
 		Card card2 = cards.get(1);
@@ -28,7 +38,12 @@ public class Rules {
 		logger.addString("Score of cards is :" +score );
 		return score;
 	}
-
+/**
+ * Private method for chenFormula to calculate the gap between two cards.
+ * @param card1
+ * @param card2
+ * @return
+ */
 	private int gap(Card card1, Card card2) {
 		int gap = 0;
 		int score = 0;
@@ -67,7 +82,10 @@ public class Rules {
 		
 		return score;
 	}
-
+/**
+ * private method for chenformula to calculate a score of a card.
+ * 
+ */
 	private double score(Card card) {
 		double score = 0;
 		switch(card.getValue()) {
@@ -89,7 +107,9 @@ public class Rules {
 		}
 		return score;
 	}
-
+/**
+ * a method to check if a "hand" contains a pair.
+ */
 	public double chancePair(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
@@ -103,7 +123,9 @@ public class Rules {
 		}
 		return 0;
 	}
-
+	/**
+	 * a method to check if a "hand" contains a 2 pairs.
+	 */
 	public double chanceTwoPair(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
@@ -131,7 +153,9 @@ public class Rules {
 		return 0;
 		
 	}
-
+	/**
+	 * a method to check if a "hand" contains three of a kind.
+	 */
 	public double chanceTreeOaK(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
@@ -154,7 +178,9 @@ public class Rules {
 		}
 		return 0;
 	}
-
+	/**
+	 * a method to check if a "hand" contains four of a kind.
+	 */
 	public double chanceFourOaK(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
@@ -198,7 +224,9 @@ public class Rules {
 		}
 		return 0;
 	}
-
+	/**
+	 * a method to check if a "hand" contains a flush or a chance for a flush.
+	 */
 	public double chanceFlush(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);
@@ -251,7 +279,9 @@ public class Rules {
 			
 		}
 	}
-
+	/**
+	 * a method to check if a "hand" contains a straight or a chance for a straight.
+	 */
 	public double chanceStraight(ArrayList<Card> cardsOnHand, ArrayList<Card> cardsOnBoard, int round) {
 		Card cardOnHand1 = cardsOnHand.get(0);
 		Card cardOnHand2 = cardsOnHand.get(1);

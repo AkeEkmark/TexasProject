@@ -32,12 +32,16 @@ public class Board {
 	}
 	/**
 	 * 
-	 * @param card : the card to remove from the board
+	 * Clears the board from cards and blinds.
 	 */
 	public void clearBoard() {
 		blinds = 0;
 		cardsOnBoard.clear();
 	}
+	/**
+	 * 
+	 * @param blind : the amount of blinds to place on the board.
+	 */
 	public void addBlind(int blind) {
 		this.blinds += blind;
 	}

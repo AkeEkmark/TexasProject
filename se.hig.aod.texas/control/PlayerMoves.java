@@ -3,7 +3,7 @@ package control;
 import model.Player;
 /**
  * Interface for the players moves.
- *  @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
+ *  @author Åke Ekmark, Andreas Wieselqvist
  *
  */
 public interface PlayerMoves {

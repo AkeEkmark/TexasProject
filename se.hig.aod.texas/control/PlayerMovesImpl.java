@@ -4,7 +4,7 @@ import model.Player;
 /**
  * Implements the interface to make the moves for the players.
  * Checks if the moves are possible and if so makes them and updates the points accordingly.
- * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
+ * @author Åke Ekmark, Andreas Wieselqvist
  *
  */
 public class PlayerMovesImpl implements PlayerMoves {

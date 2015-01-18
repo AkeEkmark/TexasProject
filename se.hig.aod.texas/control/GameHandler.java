@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import model.Card;
 import model.Player;
 /**
- * A class create and set up the game after the user has choosen the game options.
- * @author Åke Ekmark, Andreas Wieselqvist och Simon Söderhäll.
+ * A class to create and set up the game after the user has choosen the game options.
+ * @author Åke Ekmark, Andreas Wieselqvist
  *
  */
 public class GameHandler{
@@ -23,6 +23,12 @@ public class GameHandler{
 	private static final int CHECK = 0;
 	private static final int CALL = 1;
 	private static final int RAISE = 2;
+	/**
+	 * Constructor that plays the game until someone has no blinds left.
+	 * Creates the gameCreator and starts all the handlers.
+	 * @param nbrOfOpponents
+	 * @param difficulty
+	 */
 	public GameHandler(int nbrOfOpponents, int difficulty) {
 		gameCreator = new GameCreator(nbrOfOpponents, difficulty);
 		gameCreator.createHandlers();
@@ -47,6 +53,10 @@ public class GameHandler{
 		}
 		System.out.println("Game Ended");
 	}
+	/**
+	 * A method to play a game of holdem, runs through a whole game until someone folds
+	 * or a winner is decided. 
+	 */
 	private void playGame() {
 		logger.addString("Computer 1 has " +comp1.getBlinds() +"blinds");
 		logger.addString("Computer 2 has " +comp2.getBlinds() +"blinds");
@@ -165,6 +175,10 @@ public class GameHandler{
 			logger.addString("Card on the board : " +card);
 		}
 	}
+	/**
+	 * checks the players cards for a winner after the game is over.
+	 * @return
+	 */
 	private Player checkWinner() {
 		double comp1Score = 0;
 		double comp2Score = 0;
@@ -213,12 +227,12 @@ public class GameHandler{
 		}
 		//check for flush
 		check = rules.chanceFlush(comp1.getCardsOnHand(), board, round);
-		if (check > 0) {
+		if (check > 1) {
 			comp1Score = 5;
 			comp1StraightFlush++;
 		}
 		check = rules.chanceFlush(comp2.getCardsOnHand(), board, round);
-		if (check > 0) {
+		if (check > 1) {
 			comp2Score = 5;
 			comp2StraightFlush++;
 		}
@@ -272,7 +286,8 @@ public class GameHandler{
 		
 	}
 	/**
-	 * deals the starting cards to the players.
+	 * deals the starting cards to the players and clears the board.
+	 * Creates a new deck of cards and shuffles them. 
 	 */
 	private void setUpGame() {
 		round = 0;
